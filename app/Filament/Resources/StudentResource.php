@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StudentResource extends Resource
 {
@@ -38,7 +36,20 @@ class StudentResource extends Resource
 
                 Forms\Components\Select::make('relative_id')
                     ->label('Relative')
-                    ->relationship('relative', 'father_name'),
+                    ->relationship('relative', 'father_name')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('father_name'),
+                        Forms\Components\TextInput::make('mother_name'),
+                        Forms\Components\TextInput::make('phone_father'),
+                        Forms\Components\TextInput::make('phone_mother'),
+                        Forms\Components\TextInput::make('email'),
+                        Forms\Components\TextInput::make('address'),
+                        Forms\Components\TextInput::make('job_father'),
+                        Forms\Components\TextInput::make('job_mother'),
+                        Forms\Components\TextInput::make('cin_father'),
+                        Forms\Components\TextInput::make('cin_mother'),
+                        Forms\Components\TextInput::make('notes'),
+                    ]),
 
                 Forms\Components\Select::make('payment_status')
                 ->options([
