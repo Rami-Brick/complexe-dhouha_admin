@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -65,15 +66,22 @@ class StudentResource extends Resource
                     ->circular()
                     ->defaultImageUrl(url('/img/default.jpg')),
 
-                Tables\Columns\TextColumn::make('birth_date'),
+                Tables\Columns\TextColumn::make('age')
+                    ->label('Age')
+                    ->getStateUsing(fn ($record) => Carbon::parse($record->birth_date)->diff(Carbon::now())->format('%y years, %m months')),
                 Tables\Columns\TextColumn::make('course.name')->label('Course'),
                 Tables\Columns\TextColumn::make('gender'),
                 Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
                 Tables\Columns\TextColumn::make('payment_status'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('gender')
+                    ->options([
+                        'boy' => 'boy',
+                        'girl' => 'girl',
+                    ]),
             ])
+            ->rowClasses(fn ($record) => $record->gender === 'boy' ? 'bg-blue-100' : 'bg-pink-100')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
