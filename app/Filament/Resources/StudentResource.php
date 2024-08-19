@@ -70,20 +70,30 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name'),
-                Tables\Columns\TextColumn::make('last_name'),
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('Profile Picture')
+                    ->label('')
                     ->circular()
                     ->defaultImageUrl(url('/img/default.jpg')),
 
-                Tables\Columns\TextColumn::make('age')
+                Tables\Columns\TextColumn::make('first_name')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('last_name')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('birth_date')
+                    ->sortable()
                     ->label('Age')
-                    ->getStateUsing(fn ($record) => Carbon::parse($record->birth_date)->diff(Carbon::now())->format('%y years, %m months')),
-                Tables\Columns\TextColumn::make('course.name')->label('Course'),
-                Tables\Columns\TextColumn::make('gender'),
+                    ->getStateUsing(fn ($record) => Carbon::parse($record->birth_date)->diff(Carbon::now())->format('%y year(s), %m month(s)')),
+                Tables\Columns\TextColumn::make('course.name')->label('Course')
+                ->sortable()
+                ->searchable(),
+                Tables\Columns\TextColumn::make('gender')
+                ->sortable(),
                 Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
-                Tables\Columns\TextColumn::make('payment_status'),
+                Tables\Columns\TextColumn::make('payment_status')
+                ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('gender')
@@ -91,8 +101,18 @@ class StudentResource extends Resource
                         'boy' => 'boy',
                         'girl' => 'girl',
                     ]),
+                Tables\Filters\SelectFilter::make('course_id')
+                    ->label('Course')
+                    ->relationship('course', 'name')
+                    ->options(function () {
+                        return \App\Models\Course::all()->pluck('name', 'id');
+                    }),
             ])
-            ->rowClasses(fn ($record) => $record->gender === 'boy' ? 'bg-blue-100' : 'bg-pink-100')
+            ->recordClasses(fn (Student $record) => match ($record->gender) {
+                'boy' => '!bg-blue-100',
+                'girl' => '!bg-pink-100',
+                default => null,
+            })
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
