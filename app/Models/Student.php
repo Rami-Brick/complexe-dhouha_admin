@@ -50,9 +50,6 @@ class Student extends Model
 //        'created_at'
 //    ];
 
-
-
-
     /**
      * @return BelongsTo
      */

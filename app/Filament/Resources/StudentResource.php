@@ -47,6 +47,10 @@ class StudentResource extends Resource
                     'Partial'=>'Partial'
                 ]),
                 Forms\Components\TextInput::make('comments'),
+                Forms\Components\FileUpload::make('image')
+                    ->image()
+                    ->directory('students')
+                    ->nullable(),
             ]);
     }
 
@@ -56,6 +60,11 @@ class StudentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('last_name'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Profile Picture')
+                    ->circular()
+                    ->defaultImageUrl(url('/img/default.jpg')),
+
                 Tables\Columns\TextColumn::make('birth_date'),
                 Tables\Columns\TextColumn::make('course.name')->label('Course'),
                 Tables\Columns\TextColumn::make('gender'),
