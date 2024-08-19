@@ -38,17 +38,62 @@ class StudentResource extends Resource
                     ->label('Relative')
                     ->relationship('relative', 'father_name')
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('father_name'),
-                        Forms\Components\TextInput::make('mother_name'),
-                        Forms\Components\TextInput::make('phone_father'),
-                        Forms\Components\TextInput::make('phone_mother'),
-                        Forms\Components\TextInput::make('email'),
-                        Forms\Components\TextInput::make('address'),
-                        Forms\Components\TextInput::make('job_father'),
-                        Forms\Components\TextInput::make('job_mother'),
-                        Forms\Components\TextInput::make('cin_father'),
-                        Forms\Components\TextInput::make('cin_mother'),
-                        Forms\Components\TextInput::make('notes'),
+                        Forms\Components\TextInput::make('father_name')
+                            ->string()
+                            ->requiredWithout('father_name,mother_name')
+                            ->validationMessages([
+                                'required_without' => 'Sorry but you should put at least one of parents fields.',])
+                        ,
+                        Forms\Components\TextInput::make('mother_name')
+                            ->string()
+                            ->requiredWithout('mother_name,father_name')
+                            ->validationMessages([
+                                'required_without' => 'Sorry but you should put at least one of parents fields.',])
+                        ,
+                        Forms\Components\TextInput::make('phone_father')
+                            ->string()
+                            ->length(8)
+                            ->unique(column: 'phone_father')
+                            ->requiredWithout('phone_father,phone_mother')
+                            ->validationMessages([
+                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                        Forms\Components\TextInput::make('phone_mother')
+                            ->string()
+                            ->length(8)
+                            ->unique(column: 'phone_mother')
+                            ->requiredWithout('phone_mother,phone_father')
+                            ->validationMessages([
+                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->unique(),
+                        Forms\Components\TextInput::make('address')
+                            ->string(),
+                        Forms\Components\TextInput::make('job_father')
+                            ->string()
+                            ->nullable(),
+                        Forms\Components\TextInput::make('job_mother')
+                            ->string()
+                            ->nullable(),
+                        Forms\Components\TextInput::make('cin_father')
+                            ->string()
+                            ->length(8)
+                            ->alphaNum()
+                            ->unique(column: 'cin_father')
+                            ->requiredWithout('cin_father,cin_mother')
+                            ->validationMessages([
+                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                        Forms\Components\TextInput::make('cin_mother')
+                            ->string()
+                            ->length(8)
+                            ->unique(column: 'cin_mother')
+                            ->alphaNum()
+                            ->requiredWithout('cin_mother,cin_father')
+                            ->validationMessages([
+                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+
+                        Forms\Components\TextInput::make('notes')
+                            ->nullable(),
                     ]),
 
                 Forms\Components\Select::make('payment_status')
