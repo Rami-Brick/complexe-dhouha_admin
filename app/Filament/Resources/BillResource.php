@@ -23,7 +23,20 @@ class BillResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
+                Forms\Components\Select::make('student_id')
+                    ->label('Student')
+                    ->relationship('student', 'first_name'),
+                Forms\Components\DatePicker::make('due_date'),
+                Forms\Components\TextInput::make('products'),
+                Forms\Components\TextInput::make('amount'),
+                Forms\Components\TextInput::make('paid_amount'),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'Paid'=>'Paid',
+                        'Overdue'=>'Overdue',
+                        'Partial'=>'Partial'
+                    ]),
+//                Forms\Components\TextInput::make('reference'),
             ]);
     }
 
@@ -31,7 +44,13 @@ class BillResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('student.first_name')->Label('Student'),
+                Tables\Columns\TextColumn::make('due_date'),
+                Tables\Columns\TextColumn::make('products'),
+                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('paid_amount'),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('reference')
             ])
             ->filters([
                 //

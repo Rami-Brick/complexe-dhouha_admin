@@ -23,7 +23,13 @@ class CommentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
+                Forms\Components\TextInput::make('content'),
+                Forms\Components\Select::make('student_id')
+                    ->label('Student')
+                    ->relationship('student', 'first_name'),
+                Forms\Components\Select::make('staff_id')
+                    ->label('Staff')
+                    ->relationship('staff', 'name'),
             ]);
     }
 
@@ -31,7 +37,9 @@ class CommentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('content'),
+                Tables\Columns\TextColumn::make('student.name')->Label('Student'),
+                Tables\Columns\TextColumn::make('staff.name')->Label('Staff'),
             ])
             ->filters([
                 //

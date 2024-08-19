@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('comments')->nullable();
             $table->string('event_participation')->nullable();
             $table->string('leave_with')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
