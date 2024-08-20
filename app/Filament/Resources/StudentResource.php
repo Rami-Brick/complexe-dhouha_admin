@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -43,7 +44,7 @@ class StudentResource extends Resource
                             ->nullable()
                             ->requiredWithout('father_name,mother_name')
                             ->validationMessages([
-                                'required_without' => 'Sorry but you should put at least one of parents fields.',])
+                                'required_without' => 'Please provide at least one parent\'s name.',])
                         ,
                         Forms\Components\TextInput::make('mother_name')
                             ->string()
@@ -55,7 +56,7 @@ class StudentResource extends Resource
                             ->nullable()
                             ->requiredWithout('phone_father,phone_mother')
                             ->validationMessages([
-                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                                'required_without' => 'Please provide at least one parent\'s phone number.',]),
                         Forms\Components\TextInput::make('phone_mother')
                             ->string()
                             ->length(8)
@@ -79,7 +80,7 @@ class StudentResource extends Resource
                             ->unique('relatives',column: 'cin_father')
                             ->requiredWithout('cin_father,cin_mother')
                             ->validationMessages([
-                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                                'required_without' => 'Please provide at least one parent\'s cin.',]),
                         Forms\Components\TextInput::make('cin_mother')
                             ->string()
                             ->length(8)
@@ -109,22 +110,49 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name'),
-                Tables\Columns\TextColumn::make('last_name'),
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('Profile Picture')
+                    ->label('')
                     ->circular()
                     ->defaultImageUrl(url('/img/default.jpg')),
 
-                Tables\Columns\TextColumn::make('birth_date'),
-                Tables\Columns\TextColumn::make('course.name')->label('Course'),
-                Tables\Columns\TextColumn::make('gender'),
+                Tables\Columns\TextColumn::make('first_name')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('last_name')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('birth_date')
+                    ->sortable()
+                    ->label('Age')
+                    ->getStateUsing(fn ($record) => Carbon::parse($record->birth_date)->diff(Carbon::now())->format('%y year(s), %m month(s)')),
+                Tables\Columns\TextColumn::make('course.name')->label('Course')
+                ->sortable()
+                ->searchable(),
+                Tables\Columns\TextColumn::make('gender')
+                ->sortable(),
                 Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
-                Tables\Columns\TextColumn::make('payment_status'),
+                Tables\Columns\TextColumn::make('payment_status')
+                ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('gender')
+                    ->options([
+                        'boy' => 'boy',
+                        'girl' => 'girl',
+                    ]),
+                Tables\Filters\SelectFilter::make('course_id')
+                    ->label('Course')
+                    ->relationship('course', 'name')
+                    ->options(function () {
+                        return \App\Models\Course::all()->pluck('name', 'id');
+                    }),
             ])
+            ->recordClasses(fn (Student $record) => match ($record->gender) {
+                'boy' => '!bg-blue-100',
+                'girl' => '!bg-pink-100',
+                default => null,
+            })
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
