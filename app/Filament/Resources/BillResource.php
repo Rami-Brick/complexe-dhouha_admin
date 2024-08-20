@@ -36,7 +36,6 @@ class BillResource extends Resource
                         'Overdue'=>'Overdue',
                         'Partial'=>'Partial'
                     ]),
-//                Forms\Components\TextInput::make('reference'),
             ]);
     }
 
