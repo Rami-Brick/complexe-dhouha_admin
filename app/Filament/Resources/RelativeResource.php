@@ -26,33 +26,30 @@ class RelativeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('father_name')
                     ->string()
+                    ->nullable()
                     ->requiredWithout('father_name,mother_name')
                     ->validationMessages([
                         'required_without' => 'Sorry but you should put at least one of parents fields.',])
                 ,
                 Forms\Components\TextInput::make('mother_name')
                     ->string()
-                    ->requiredWithout('mother_name,father_name')
-                    ->validationMessages([
-                        'required_without' => 'Sorry but you should put at least one of parents fields.',])
-                ,
+                    ->nullable(),
                 Forms\Components\TextInput::make('phone_father')
                     ->string()
                     ->length(8)
-                    ->unique(column: 'phone_father')
+                    ->unique('relatives',column: 'phone_father')
+                    ->nullable()
                     ->requiredWithout('phone_father,phone_mother')
                     ->validationMessages([
                         'required_without' => 'Sorry but you should put at least one of parents fields.',]),
                 Forms\Components\TextInput::make('phone_mother')
                     ->string()
                     ->length(8)
-                    ->unique(column: 'phone_mother')
-                    ->requiredWithout('phone_mother,phone_father')
-                    ->validationMessages([
-                        'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                    ->unique('relatives',column: 'phone_mother'),
+
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->unique(),
+                    ->unique('relatives',column: 'email'),
                 Forms\Components\TextInput::make('address')
                     ->string(),
                 Forms\Components\TextInput::make('job_father')
@@ -65,18 +62,16 @@ class RelativeResource extends Resource
                     ->string()
                     ->length(8)
                     ->alphaNum()
-                    ->unique(column: 'cin_father')
+                    ->unique('relatives',column: 'cin_father')
                     ->requiredWithout('cin_father,cin_mother')
                     ->validationMessages([
                         'required_without' => 'Sorry but you should put at least one of parents fields.',]),
                 Forms\Components\TextInput::make('cin_mother')
                     ->string()
                     ->length(8)
-                    ->unique(column: 'cin_mother')
-                    ->alphaNum()
-                    ->requiredWithout('cin_mother,cin_father')
-                    ->validationMessages([
-                        'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                    ->unique('relatives',column: 'cin_mother')
+                    ->alphaNum(),
+
 
                 Forms\Components\TextInput::make('notes')
                     ->nullable(),
