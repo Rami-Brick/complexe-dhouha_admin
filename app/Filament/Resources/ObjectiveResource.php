@@ -61,8 +61,11 @@ class ObjectiveResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('tasks related to course')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('target_date'),
-                Tables\Columns\TextColumn::make('progress'),
+                Tables\Columns\TextColumn::make('target_date')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('progress')
+                ->searchable()
+                ->sortable(),
                 Tables\Columns\TextColumn::make('course.name')->label('Course')
 
             ])

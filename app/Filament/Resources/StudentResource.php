@@ -109,6 +109,7 @@ class StudentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('')
@@ -129,8 +130,12 @@ class StudentResource extends Resource
                 Tables\Columns\TextColumn::make('course.name')->label('Course')
                 ->sortable()
                 ->searchable(),
-                Tables\Columns\TextColumn::make('gender')
-                ->sortable(),
+                Tables\Columns\BadgeColumn::make('gender')
+                    ->colors([
+                        'blue' => 'boy',
+                        'pink' => 'girl',
+                    ])
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
                 Tables\Columns\TextColumn::make('payment_status')
                 ->sortable(),
@@ -147,12 +152,13 @@ class StudentResource extends Resource
                     ->options(function () {
                         return \App\Models\Course::all()->pluck('name', 'id');
                     }),
+                Tables\Filters\SelectFilter::make('payment_status')
+                    ->options([
+                        'Paid'=>'Paid',
+                        'Overdue'=>'Overdue',
+                        'Partial'=>'Partial'
+                    ]),
             ])
-            ->recordClasses(fn (Student $record) => match ($record->gender) {
-                'boy' => '!bg-blue-100',
-                'girl' => '!bg-pink-100',
-                default => null,
-            })
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

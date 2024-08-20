@@ -34,19 +34,16 @@ class StaffResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->sortable()
                     ->searchable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
-                    ->options([
-                        'name' => 'Name',
-                        'email' => 'Email',
-                        'phone' => 'Phone',
-                    ]),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
