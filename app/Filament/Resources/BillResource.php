@@ -43,16 +43,31 @@ class BillResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('student.first_name')->Label('Student'),
-                Tables\Columns\TextColumn::make('due_date'),
-                Tables\Columns\TextColumn::make('products'),
-                Tables\Columns\TextColumn::make('amount'),
-                Tables\Columns\TextColumn::make('paid_amount'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('student.first_name')->Label('Student')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('due_date')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('products')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('paid_amount')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('reference')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'Paid'=>'Paid',
+                        'Overdue'=>'Overdue',
+                        'Partial'=>'Partial'
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

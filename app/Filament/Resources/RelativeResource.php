@@ -83,23 +83,36 @@ class RelativeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('father_name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('mother_name')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone_father')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone_mother'),
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('address'),
-                Tables\Columns\TextColumn::make('job_father'),
-                Tables\Columns\TextColumn::make('job_mother'),
-                Tables\Columns\TextColumn::make('cin_father'),
-                Tables\Columns\TextColumn::make('cin_mother'),
+                Tables\Columns\TextColumn::make('phone_mother')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('address')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('job_father')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('job_mother')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cin_father')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cin_mother')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('notes'),
 
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -43,10 +43,15 @@ class EventResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('date'),
-                Tables\Columns\TextColumn::make('fee'),
-                Tables\Columns\TextColumn::make('age_group'),
+                Tables\Columns\TextColumn::make('date')
+                ->sortable(),
+                Tables\Columns\TextColumn::make('fee')
+                ->sortable(),
+                Tables\Columns\TextColumn::make('age_group')
+                ->searchable()
+                ->sortable(),
             ])
             ->filters([
                 //

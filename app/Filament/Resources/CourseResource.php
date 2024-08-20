@@ -44,9 +44,14 @@ class CourseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('level'),
-                Tables\Columns\TextColumn::make('staff.name')->label('Staff'),
+                    ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('level')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('staff.name')->label('Staff')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //

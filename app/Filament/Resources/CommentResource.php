@@ -37,9 +37,14 @@ class CommentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('content'),
-                Tables\Columns\TextColumn::make('student.name')->Label('Student'),
-                Tables\Columns\TextColumn::make('staff.name')->Label('Staff'),
+                Tables\Columns\TextColumn::make('content')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('student.name')->Label('Student')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('staff.name')->Label('Staff')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
