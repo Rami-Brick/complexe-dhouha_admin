@@ -25,57 +25,68 @@ class RelativeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('father_name')
-                    ->string()
                     ->nullable()
-                    ->requiredWithout('father_name,mother_name')
+                    ->requiredWithout('mother_name')
                     ->validationMessages([
-                        'required_without' => 'Please provide at least one parent\'s name.',])
-                ,
+                        'required_without' => 'Please provide at least one parent\'s name.'])
+                    ->requiredWithAll('father_name,phone_father,email,cin_father'),
+
                 Forms\Components\TextInput::make('mother_name')
-                    ->string()
                     ->nullable()
-                    ->requiredWithout('mother_name,father_name')
+                    ->requiredWithout('father_name')
                     ->validationMessages([
-                        'required_without' => 'Please provide at least one parent\'s name.',]),
+                        'required_without' => 'Please provide at least one parent\'s name.'])
+                    ->requiredWithAll('mother_name,phone_mother,email,cin_mother'),
 
                 Forms\Components\TextInput::make('phone_father')
-                    ->string()
                     ->length(8)
-                    ->unique('relatives',column: 'phone_father')
+                    ->unique('relatives',column: 'phone_father',ignoreRecord: true)
                     ->nullable()
-                    ->requiredWithout('phone_father,phone_mother')
+                    ->requiredWithout('phone_mother')
                     ->validationMessages([
-                        'required_without' => 'Please provide at least one parent\'s phone number.',]),
+                        'required_without' => 'Please provide at least one parent\'s phone number.']),
+
                 Forms\Components\TextInput::make('phone_mother')
-                    ->string()
+                    ->nullable()
                     ->length(8)
-                    ->unique('relatives',column: 'phone_mother'),
+
+                    ->unique('relatives',column:'phone_mother',ignoreRecord: true )
+
+                    ->requiredWithout('phone_father'),
 
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->unique('relatives',column: 'email'),
+                    ->unique('relatives',column: 'email',ignoreRecord: true),
+
                 Forms\Components\TextInput::make('address')
+                    ->nullable()
                     ->string(),
+
                 Forms\Components\TextInput::make('job_father')
                     ->string()
                     ->nullable(),
+
                 Forms\Components\TextInput::make('job_mother')
                     ->string()
                     ->nullable(),
+
                 Forms\Components\TextInput::make('cin_father')
                     ->string()
                     ->length(8)
                     ->alphaNum()
-                    ->unique('relatives',column: 'cin_father')
-                    ->requiredWithout('cin_father,cin_mother')
+                    ->unique('relatives',column:'cin_father',ignoreRecord: true )
+                    ->requiredWithout('cin_mother')
                     ->validationMessages([
-                        'required_without' => 'Please provide at least one parent\'s cin.',]),
+                        'required_without' => 'Please provide at least one parent\'s cin.']),
+
                 Forms\Components\TextInput::make('cin_mother')
                     ->string()
                     ->length(8)
-                    ->unique('relatives',column: 'cin_mother')
-                    ->alphaNum(),
-
+                    ->unique('relatives',column: 'cin_mother',ignoreRecord: true)
+                    ->alphaNum()
+                    ->requiredWithout('cin_father')
+                    ->validationMessages([
+                        'required_without' => 'Please provide at least one parent\'s cin.']),
 
                 Forms\Components\TextInput::make('notes')
                     ->nullable(),
