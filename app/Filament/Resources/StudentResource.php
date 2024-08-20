@@ -44,7 +44,7 @@ class StudentResource extends Resource
                             ->nullable()
                             ->requiredWithout('father_name,mother_name')
                             ->validationMessages([
-                                'required_without' => 'Sorry but you should put at least one of parents fields.',])
+                                'required_without' => 'Please provide at least one parent\'s name.',])
                         ,
                         Forms\Components\TextInput::make('mother_name')
                             ->string()
@@ -56,7 +56,7 @@ class StudentResource extends Resource
                             ->nullable()
                             ->requiredWithout('phone_father,phone_mother')
                             ->validationMessages([
-                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                                'required_without' => 'Please provide at least one parent\'s phone number.',]),
                         Forms\Components\TextInput::make('phone_mother')
                             ->string()
                             ->length(8)
@@ -80,7 +80,7 @@ class StudentResource extends Resource
                             ->unique('relatives',column: 'cin_father')
                             ->requiredWithout('cin_father,cin_mother')
                             ->validationMessages([
-                                'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                                'required_without' => 'Please provide at least one parent\'s cin.',]),
                         Forms\Components\TextInput::make('cin_mother')
                             ->string()
                             ->length(8)
