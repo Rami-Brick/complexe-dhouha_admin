@@ -10,8 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+
 
 class RelativeResource extends Resource
 {
@@ -19,21 +19,62 @@ class RelativeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('father_name'),
-                Forms\Components\TextInput::make('mother_name'),
-                Forms\Components\TextInput::make('phone_father'),
-                Forms\Components\TextInput::make('phone_mother'),
-                Forms\Components\TextInput::make('email'),
-                Forms\Components\TextInput::make('address'),
-                Forms\Components\TextInput::make('job_father'),
-                Forms\Components\TextInput::make('job_mother'),
-                Forms\Components\TextInput::make('cin_father'),
-                Forms\Components\TextInput::make('cin_mother'),
-                Forms\Components\TextInput::make('notes'),
+                Forms\Components\TextInput::make('father_name')
+                    ->string()
+                    ->nullable()
+                    ->requiredWithout('father_name,mother_name')
+                    ->validationMessages([
+                        'required_without' => 'Sorry but you should put at least one of parents fields.',])
+                ,
+                Forms\Components\TextInput::make('mother_name')
+                    ->string()
+                    ->nullable(),
+                Forms\Components\TextInput::make('phone_father')
+                    ->string()
+                    ->length(8)
+                    ->unique('relatives',column: 'phone_father')
+                    ->nullable()
+                    ->requiredWithout('phone_father,phone_mother')
+                    ->validationMessages([
+                        'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                Forms\Components\TextInput::make('phone_mother')
+                    ->string()
+                    ->length(8)
+                    ->unique('relatives',column: 'phone_mother'),
+
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->unique('relatives',column: 'email'),
+                Forms\Components\TextInput::make('address')
+                    ->string(),
+                Forms\Components\TextInput::make('job_father')
+                    ->string()
+                    ->nullable(),
+                Forms\Components\TextInput::make('job_mother')
+                    ->string()
+                    ->nullable(),
+                Forms\Components\TextInput::make('cin_father')
+                    ->string()
+                    ->length(8)
+                    ->alphaNum()
+                    ->unique('relatives',column: 'cin_father')
+                    ->requiredWithout('cin_father,cin_mother')
+                    ->validationMessages([
+                        'required_without' => 'Sorry but you should put at least one of parents fields.',]),
+                Forms\Components\TextInput::make('cin_mother')
+                    ->string()
+                    ->length(8)
+                    ->unique('relatives',column: 'cin_mother')
+                    ->alphaNum(),
+
+
+                Forms\Components\TextInput::make('notes')
+                    ->nullable(),
             ]);
     }
 
