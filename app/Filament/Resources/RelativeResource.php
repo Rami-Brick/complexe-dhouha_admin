@@ -33,7 +33,11 @@ class RelativeResource extends Resource
                 ,
                 Forms\Components\TextInput::make('mother_name')
                     ->string()
-                    ->nullable(),
+                    ->nullable()
+                    ->requiredWithout('mother_name,father_name')
+                    ->validationMessages([
+                        'required_without' => 'Please provide at least one parent\'s name.',]),
+
                 Forms\Components\TextInput::make('phone_father')
                     ->string()
                     ->length(8)
@@ -65,7 +69,7 @@ class RelativeResource extends Resource
                     ->unique('relatives',column: 'cin_father')
                     ->requiredWithout('cin_father,cin_mother')
                     ->validationMessages([
-                        'required_without' => 'Please provide at least one parent\'s phone cin.',]),
+                        'required_without' => 'Please provide at least one parent\'s cin.',]),
                 Forms\Components\TextInput::make('cin_mother')
                     ->string()
                     ->length(8)

@@ -27,7 +27,7 @@ class ObjectiveFactory extends Factory
         return [
             'description'=>fake()->Text(),
             'target_date'=>fake()->date(),
-            'progress' => $this->faker->word(),
+            'progress' => $this->faker->randomElement(['not started yet', 'in progress', 'finished']),
             'course_id' => Course::factory(),
         ];
     }

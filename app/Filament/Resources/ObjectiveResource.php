@@ -24,32 +24,32 @@ class ObjectiveResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('description')
-                    ->label('tasks related to course'),
+                    ->label('Objective'),
                 Forms\Components\DatePicker::make('target_date'),
-                Forms\Components\Select::make('age_group')
-                    ->options([
-                        'not started yet' => 'not started yet',
-                        'on progress' => 'on progress',
-                        'finished' => 'finished',
-                    ]),
-                Forms\Components\Select::make('course_id')
-                    ->label('Course')
-                    ->relationship('course', 'name')
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name'),
-                        Forms\Components\Select::make('level')
-                            ->options([
-                                'bébé' => 'bébé',
-                                '1-2 ans' => '1-2 ans',
-                                '2-3 ans' => '2-3 ans',
-                                '3 ans' => '3 ans',
-                                '4 ans' => '4 ans',
-                                '5 ans' => '5 ans',
-                            ]),
-                        Forms\Components\Select::make('staff_id')
-                            ->label('Staff')
-                            ->relationship('staff', 'name')
-                    ]),
+//                Forms\Components\Select::make('progress')
+//                    ->options([
+//                        'not started yet' => 'not started yet',
+//                        'in progress' => 'in progress',
+//                        'finished' => 'finished',
+//                    ]),
+//                Forms\Components\Select::make('course_id')
+//                    ->label('Course')
+//                    ->relationship('course', 'name')
+//                    ->createOptionForm([
+//                        Forms\Components\TextInput::make('name'),
+//                        Forms\Components\Select::make('level')
+//                            ->options([
+//                                'bébé' => 'bébé',
+//                                '1-2 ans' => '1-2 ans',
+//                                '2-3 ans' => '2-3 ans',
+//                                '3 ans' => '3 ans',
+//                                '4 ans' => '4 ans',
+//                                '5 ans' => '5 ans',
+//                            ]),
+//                        Forms\Components\Select::make('staff_id')
+//                            ->label('Staff')
+//                            ->relationship('staff', 'name')
+//                    ]),
 
             ]);
     }
@@ -59,7 +59,8 @@ class ObjectiveResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->label('tasks related to course')
+                    ->label('Objective')
+                    ->limit('30')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('target_date')
                     ->sortable(),
