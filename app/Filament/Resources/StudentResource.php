@@ -7,6 +7,7 @@ use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
 use Carbon\Carbon;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -167,12 +168,17 @@ class StudentResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->headerActions([
-                Tables\Actions\ExportAction::make('Excel')->exporter(StudentExporter::class)
+                Tables\Actions\ExportAction::make('Excel')
+                    ->exporter(StudentExporter::class)
+                    ->formats([
+                        ExportFormat::Xlsx
+                    ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                Tables\Actions\ExportBulkAction::make('Excel')->exporter(StudentExporter::class),
             ]);
     }
 
