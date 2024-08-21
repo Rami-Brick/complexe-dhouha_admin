@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AnourValar\EloquentSerialize\Tests\Models\Post;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
@@ -196,7 +197,13 @@ class StudentResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make('edit'),
+                Tables\Actions\DeleteAction::make('delete')
+                    ->action(fn (Post $record) => $record->delete())
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete post')
+                    ->modalDescription('Are you sure you\'d like to delete this post? This cannot be undone.')
+                    ->modalSubmitActionLabel('Yes, delete it'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
