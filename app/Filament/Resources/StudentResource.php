@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class StudentResource extends Resource
 {
@@ -110,6 +111,10 @@ class StudentResource extends Resource
     {
         return $table
             ->striped()
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->leftJoin('relatives', 'students.relative_id', '=', 'relatives.id')
+                    ->selectRaw('students.*, COALESCE(relatives.father_name, relatives.mother_name) as relative_name');
+            })
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('')
@@ -136,7 +141,10 @@ class StudentResource extends Resource
                         'pink' => 'girl',
                     ])
                     ->sortable(),
-                Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
+//                Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
+                Tables\Columns\TextColumn::make('relative_name')->label('Relative'),
+
+
                 Tables\Columns\TextColumn::make('payment_status')
                 ->sortable(),
             ])
