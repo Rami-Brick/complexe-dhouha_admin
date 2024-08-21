@@ -23,10 +23,18 @@ class EventResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\DatePicker::make('date'),
-                Forms\Components\TextInput::make('fee'),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->alpha()
+                    ->maxLength(25),
+                Forms\Components\DatePicker::make('date')
+                    ->required(),
+                Forms\Components\TextInput::make('fee')
+                    ->string()
+                    ->maxLength(50)
+                    ->required(),
                 Forms\Components\Select::make('age_group')
+                    ->required()
                     ->options([
                         'bébé' => 'bébé',
                         '1-2 ans' => '1-2 ans',

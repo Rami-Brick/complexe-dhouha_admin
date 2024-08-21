@@ -27,12 +27,16 @@ class RelativeResource extends Resource
                 Forms\Components\TextInput::make('father_name')
                     ->nullable()
                     ->requiredWithout('mother_name')
+                    ->alpha()
+                    ->maxLength(25)
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s name.'])
                     ->requiredWithAll('father_name,phone_father,email,cin_father'),
 
                 Forms\Components\TextInput::make('mother_name')
                     ->nullable()
+                    ->alpha()
+                    ->maxLength(25)
                     ->requiredWithout('father_name')
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s name.'])
@@ -42,6 +46,7 @@ class RelativeResource extends Resource
                     ->length(8)
                     ->unique('relatives',column: 'phone_father',ignoreRecord: true)
                     ->nullable()
+                    ->alphaNum()
                     ->requiredWithout('phone_mother')
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s phone number.']),
@@ -49,9 +54,8 @@ class RelativeResource extends Resource
                 Forms\Components\TextInput::make('phone_mother')
                     ->nullable()
                     ->length(8)
-
+                    ->alphaNum()
                     ->unique('relatives',column:'phone_mother',ignoreRecord: true )
-
                     ->requiredWithout('phone_father'),
 
                 Forms\Components\TextInput::make('email')
@@ -60,14 +64,19 @@ class RelativeResource extends Resource
 
                 Forms\Components\TextInput::make('address')
                     ->nullable()
+                    ->maxLength(100)
                     ->string(),
 
                 Forms\Components\TextInput::make('job_father')
                     ->string()
+                    ->alpha()
+                    ->maxLength(25)
                     ->nullable(),
 
                 Forms\Components\TextInput::make('job_mother')
                     ->string()
+                    ->alpha()
+                    ->maxLength(25)
                     ->nullable(),
 
                 Forms\Components\TextInput::make('cin_father')
@@ -88,7 +97,8 @@ class RelativeResource extends Resource
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s cin.']),
 
-                Forms\Components\TextInput::make('notes')
+                Forms\Components\Textarea::make('notes')
+                    ->maxLength(500)
                     ->nullable(),
             ]);
     }

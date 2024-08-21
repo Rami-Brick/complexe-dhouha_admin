@@ -23,7 +23,10 @@ class CommentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('content'),
+                Forms\Components\MarkdownEditor::make('content')
+                    ->string()
+                    ->required()
+                    ->maxLength(500),
                 Forms\Components\Select::make('student_id')
                     ->label('Student')
                     ->relationship('student', 'first_name'),

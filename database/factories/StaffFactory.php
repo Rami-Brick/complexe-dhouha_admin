@@ -25,7 +25,7 @@ class StaffFactory extends Factory
     {
         return [
             'name'=>fake()->Name(),
-            'phone'=>fake()->phoneNumber(),
+            'phone'=>$this->faker->unique()->numberBetween(93000000,99000000),
             'email'=>fake()->email(),
         ];
     }

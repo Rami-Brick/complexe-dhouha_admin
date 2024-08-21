@@ -23,8 +23,12 @@ class CourseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->alpha()
+                    ->maxLength(25),
                 Forms\Components\Select::make('level')
+                    ->required()
                     ->options([
                         'bébé' => 'bébé',
                         '1-2 ans' => '1-2 ans',

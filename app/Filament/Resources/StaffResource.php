@@ -23,9 +23,21 @@ class StaffResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('email'),
-                Forms\Components\TextInput::make('phone'),
+                Forms\Components\TextInput::make('name')
+                    ->alpha()
+                    ->maxLength(25)
+                    ->required(),
+
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->unique( 'staff',column: 'email',ignoreRecord: true )
+                    ->required(),
+
+                Forms\Components\TextInput::make('phone')
+                    ->maxLength(8)
+                    ->alphaNum()
+                    ->unique(ignoreRecord: true)
+                    ->required(),
             ]);
     }
 

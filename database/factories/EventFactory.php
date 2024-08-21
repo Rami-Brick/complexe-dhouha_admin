@@ -26,7 +26,7 @@ class EventFactory extends Factory
         return [
             'name' => $this->faker->word(),
             'date' => $this->faker->date(),
-            'fee' => $this->faker->randomDigit(),
+            'fee' => $this->faker->randomElement(['100 dt', '200 dt', '300 dt', '400 dt', '500 dt', '600 dt', '700 dt', '800 dt', '900 dt']),
             'age_group' => $this->faker->randomElement(['1-2 ans', '2-3 ans', '3 ans', '4 ans', '5 ans']),
         ];
     }

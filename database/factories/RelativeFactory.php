@@ -24,19 +24,20 @@ class RelativeFactory extends Factory
     public function definition(): array
     {
         return [
-            'father_name'=>fake()->Name(),
-            'mother_name'=>fake()->Name(),
-            'phone_father'=>fake()->PhoneNumber(),
-            'phone_mother'=>fake()->PhoneNumber(),
-            'job_father'=>fake()->JobTitle(),
-            'job_mother'=>fake()->JobTitle(),
-            'cin_father'=>rand(10000000,99999999),
-            'cin_mother'=>rand(10000000,99999999),
-            'email'=>fake()->unique()->Email(),
-            'address'=>fake()->Address(),
-            'notes'=>fake()->Text(),
+            'father_name' => fake()->Name(),
+            'mother_name' => fake()->Name(),
+            'phone_father' => $this->faker->unique()->numberBetween(93000000,99000000),
+            'phone_mother' => $this->faker->unique()->numberBetween(93000000,99000000),
+            'job_father' => fake()->JobTitle(),
+            'job_mother' => fake()->JobTitle(),
+            'cin_father' => $this->faker->unique()->numberBetween(10000000,30000000),
+            'cin_mother' => $this->faker->unique()->numberBetween(10000000,30000000),
+            'email' => fake()->unique()->Email(),
+            'address' => fake()->Address(),
+            'notes' => fake()->Text(),
         ];
     }
+
 
     /**
      * Indicate that the model's email address should be unverified.
