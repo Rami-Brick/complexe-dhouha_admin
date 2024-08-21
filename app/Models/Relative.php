@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string notes
  * @property string created_at
  * @property string updated_at
+ * @property string parent_name
  *
  * @proprety Student student
  */
@@ -34,4 +36,11 @@ class Relative extends Model
     {
         return $this->hasMany(Student::class,'student_id');
     }
+    protected function parentName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => $this->father_name??$this->mother_name,
+        );
+    }
+
 }
