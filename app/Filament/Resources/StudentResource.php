@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\StudentExporter;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
@@ -11,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class StudentResource extends Resource
 {
@@ -37,7 +39,9 @@ class StudentResource extends Resource
 
                 Forms\Components\Select::make('relative_id')
                     ->label('Relative')
-                    ->relationship('relative', 'father_name')
+                    ->relationship('relative', 'parent_name', function($query) {
+                        return $query->select('id', \DB::raw('COALESCE(father_name, mother_name) as parent_name'))->orderBy('father_name', 'asc');
+                    })
                     ->createOptionForm([
                         Forms\Components\TextInput::make('father_name')
                             ->string()
@@ -136,7 +140,7 @@ class StudentResource extends Resource
                         'pink' => 'girl',
                     ])
                     ->sortable(),
-                Tables\Columns\TextColumn::make('relative.father_name')->label('Relative'),
+                Tables\Columns\TextColumn::make('relative.parent_name')->label('Relative'),
                 Tables\Columns\TextColumn::make('payment_status')
                 ->sortable(),
             ])
@@ -161,6 +165,9 @@ class StudentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+            ])
+            ->headerActions([
+                Tables\Actions\ExportAction::make('Excel')->exporter(StudentExporter::class)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
