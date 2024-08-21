@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AnourValar\EloquentSerialize\Tests\Models\Post;
 use App\Filament\Resources\RelativeResource\Pages;
 use App\Filament\Resources\RelativeResource\RelationManagers;
 use App\Models\Relative;
@@ -27,12 +28,16 @@ class RelativeResource extends Resource
                 Forms\Components\TextInput::make('father_name')
                     ->nullable()
                     ->requiredWithout('mother_name')
+                    ->alpha()
+                    ->maxLength(25)
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s name.'])
                     ->requiredWithAll('father_name,phone_father,email,cin_father'),
 
                 Forms\Components\TextInput::make('mother_name')
                     ->nullable()
+                    ->alpha()
+                    ->maxLength(25)
                     ->requiredWithout('father_name')
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s name.'])
@@ -42,6 +47,7 @@ class RelativeResource extends Resource
                     ->length(8)
                     ->unique('relatives',column: 'phone_father',ignoreRecord: true)
                     ->nullable()
+                    ->alphaNum()
                     ->requiredWithout('phone_mother')
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s phone number.']),
@@ -49,9 +55,8 @@ class RelativeResource extends Resource
                 Forms\Components\TextInput::make('phone_mother')
                     ->nullable()
                     ->length(8)
-
+                    ->alphaNum()
                     ->unique('relatives',column:'phone_mother',ignoreRecord: true )
-
                     ->requiredWithout('phone_father'),
 
                 Forms\Components\TextInput::make('email')
@@ -60,14 +65,19 @@ class RelativeResource extends Resource
 
                 Forms\Components\TextInput::make('address')
                     ->nullable()
+                    ->maxLength(100)
                     ->string(),
 
                 Forms\Components\TextInput::make('job_father')
                     ->string()
+                    ->alpha()
+                    ->maxLength(25)
                     ->nullable(),
 
                 Forms\Components\TextInput::make('job_mother')
                     ->string()
+                    ->alpha()
+                    ->maxLength(25)
                     ->nullable(),
 
                 Forms\Components\TextInput::make('cin_father')
@@ -88,7 +98,8 @@ class RelativeResource extends Resource
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s cin.']),
 
-                Forms\Components\TextInput::make('notes')
+                Forms\Components\Textarea::make('notes')
+                    ->maxLength(500)
                     ->nullable(),
             ]);
     }
@@ -130,7 +141,13 @@ class RelativeResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make('edit'),
+                Tables\Actions\DeleteAction::make('delete')
+                    ->action(fn (Post $record) => $record->delete())
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete post')
+                    ->modalDescription('Are you sure you\'d like to delete this post? This cannot be undone.')
+                    ->modalSubmitActionLabel('Yes, delete it'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

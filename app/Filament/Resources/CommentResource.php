@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AnourValar\EloquentSerialize\Tests\Models\Post;
 use App\Filament\Resources\CommentResource\Pages;
 use App\Filament\Resources\CommentResource\RelationManagers;
 use App\Models\Comment;
@@ -23,7 +24,10 @@ class CommentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('content'),
+                Forms\Components\MarkdownEditor::make('content')
+                    ->string()
+                    ->required()
+                    ->maxLength(500),
                 Forms\Components\Select::make('student_id')
                     ->label('Student')
                     ->relationship('student', 'first_name'),
@@ -51,7 +55,13 @@ class CommentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make('edit'),
+                Tables\Actions\DeleteAction::make('delete')
+                    ->action(fn (Post $record) => $record->delete())
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete post')
+                    ->modalDescription('Are you sure you\'d like to delete this post? This cannot be undone.')
+                    ->modalSubmitActionLabel('Yes, delete it'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

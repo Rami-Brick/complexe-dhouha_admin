@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AnourValar\EloquentSerialize\Tests\Models\Post;
 use App\Filament\Resources\StaffResource\Pages;
 use App\Filament\Resources\StaffResource\RelationManagers;
 use App\Models\Staff;
@@ -23,9 +24,21 @@ class StaffResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('email'),
-                Forms\Components\TextInput::make('phone'),
+                Forms\Components\TextInput::make('name')
+                    ->alpha()
+                    ->maxLength(25)
+                    ->required(),
+
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->unique( 'staff',column: 'email',ignoreRecord: true )
+                    ->required(),
+
+                Forms\Components\TextInput::make('phone')
+                    ->maxLength(8)
+                    ->alphaNum()
+                    ->unique(ignoreRecord: true)
+                    ->required(),
             ]);
     }
 
@@ -46,7 +59,13 @@ class StaffResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make('edit'),
+                Tables\Actions\DeleteAction::make('delete')
+                    ->action(fn (Post $record) => $record->delete())
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete post')
+                    ->modalDescription('Are you sure you\'d like to delete this post? This cannot be undone.')
+                    ->modalSubmitActionLabel('Yes, delete it'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

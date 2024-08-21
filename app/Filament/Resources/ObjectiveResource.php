@@ -23,9 +23,13 @@ class ObjectiveResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('description')
+
+                Forms\Components\Textarea::make('description')
+                    ->maxLength(500)
+                    ->required()
                     ->label('Objective'),
-                Forms\Components\DatePicker::make('target_date'),
+                Forms\Components\DatePicker::make('target_date')
+                    ->required(),
 //                Forms\Components\Select::make('progress')
 //                    ->options([
 //                        'not started yet' => 'not started yet',
@@ -50,6 +54,7 @@ class ObjectiveResource extends Resource
 //                            ->label('Staff')
 //                            ->relationship('staff', 'name')
 //                    ]),
+
 
             ]);
     }
