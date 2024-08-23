@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Exports\StudentExporter;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
+use App\Models\Relative;
 use App\Models\Student;
 use Carbon\Carbon;
 use Filament\Actions\Exports\Enums\ExportFormat;
@@ -20,7 +21,7 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     public static function form(Form $form): Form
     {
@@ -49,32 +50,30 @@ class StudentResource extends Resource
 
                 Forms\Components\Select::make('relative_id')
                     ->label('Relative')
-                    ->options(function () {
-                        return \App\Models\Relative::query()
-                            ->get()
-                            ->mapWithKeys(function ($relative) {
-                                return [$relative->id => trim($relative->father_name . ', ' . $relative->mother_name)];
-                            });
-                    })
+                    ->relationship('relative')
                     ->searchable()
-                    ->getSearchResultsUsing(function ($query, $search) {
-                        return \App\Models\Relative::query()
+                    ->options(
+                        Relative::limit(5)->whereDoesntHave('students')->get()
+                        ->mapWithKeys(function ($relative) {
+                            return [$relative->id => trim($relative->father_name . ', ' . $relative->mother_name)];
+                        })
+                    )
+                    ->getSearchResultsUsing(function ($query, string|null$search) {
+                        return Relative::query()
                             ->where(function ($query) use ($search) {
                                 $query->where('father_name', 'like', '%' . $search . '%')
                                     ->orWhere('mother_name', 'like', '%' . $search . '%');
-                            })
+                            })->limit(5)
                             ->get()
                             ->mapWithKeys(function ($relative) {
                                 return [$relative->id => trim($relative->father_name . ', ' . $relative->mother_name)];
                             });
                     })
                     ->getOptionLabelUsing(function ($value) {
-                        $relative = \App\Models\Relative::find($value);
-                        return $relative ? trim($relative->father_name . ' ' . $relative->mother_name) : 'N/A';
+                        $relative = Relative::findOrFail($value);
+                        return trim($relative->father_name . ', ' . $relative->mother_name);
                     })
-        ->createOptionForm([
-
-
+                    ->createOptionForm([
                         Forms\Components\TextInput::make('father_name')
                             ->nullable()
                             ->requiredWithout('mother_name')
