@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string updated_at
  * @property string parent_name
  *
- * @proprety Student student
+ * @proprety \Illuminate\Support\Collection students
  */
 class Relative extends Model
 {
@@ -32,9 +32,9 @@ class Relative extends Model
 
     protected $guarded = [];
 
-    public function student()
+    public function students()
     {
-        return $this->hasMany(Student::class,'student_id');
+        return $this->hasMany(Student::class);
     }
     protected function parentName(): Attribute
     {
