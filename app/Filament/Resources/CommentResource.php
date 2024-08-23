@@ -29,9 +29,11 @@ class CommentResource extends Resource
                     ->required()
                     ->maxLength(500),
                 Forms\Components\Select::make('student_id')
+                    ->required()
                     ->label('Student')
                     ->relationship('student', 'first_name'),
                 Forms\Components\Select::make('staff_id')
+                    ->required()
                     ->label('Staff')
                     ->relationship('staff', 'name'),
             ]);

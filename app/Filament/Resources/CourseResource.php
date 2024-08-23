@@ -35,6 +35,7 @@ class CourseResource extends Resource
                         '5 ans' => '5 ans',
                     ]),
                 Forms\Components\Select::make('staff_id')
+                    ->required()
                     ->label('Staff')
                     ->relationship('staff', 'name')
             ]);
