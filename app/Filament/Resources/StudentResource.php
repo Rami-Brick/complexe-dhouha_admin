@@ -34,7 +34,7 @@ class StudentResource extends Resource
                 Forms\Components\TextInput::make('last_name')
                     ->alpha()
                     ->maxLength(25)
-                    ->requiredWithAll('first_name,birth_date,gender,payment_status,payment_status'),
+                    ->requiredWithAll('first_name,birth_date,gender,payment_status'),
 
                 Forms\Components\DatePicker::make('birth_date'),
                 Forms\Components\Select::make('gender')
