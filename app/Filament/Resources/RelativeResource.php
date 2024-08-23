@@ -119,21 +119,9 @@ class RelativeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('job_father')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('job_mother')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('cin_father')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('cin_mother')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('notes'),
+                Tables\Columns\TextColumn::make('created_at')
+                ->label('Creation Date')
+                ->sortable(),
 
             ])
             ->filters([

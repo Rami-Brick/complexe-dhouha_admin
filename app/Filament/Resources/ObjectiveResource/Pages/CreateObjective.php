@@ -9,4 +9,10 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateObjective extends CreateRecord
 {
     protected static string $resource = ObjectiveResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
 }

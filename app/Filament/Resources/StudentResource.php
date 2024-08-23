@@ -9,6 +9,7 @@ use App\Models\Student;
 use Carbon\Carbon;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -200,6 +201,9 @@ class StudentResource extends Resource
                 Tables\Columns\TextColumn::make('relative.parent_name')->label('Relative'),
                 Tables\Columns\TextColumn::make('payment_status')
                 ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Creation Date')
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('gender')
