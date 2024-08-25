@@ -27,7 +27,15 @@ class BillResource extends Resource
                     ->label('Student')
                     ->relationship('student', 'first_name'),
                 Forms\Components\DatePicker::make('due_date'),
-                Forms\Components\TextInput::make('products'),
+                Forms\Components\Select::make('products')
+                    ->multiple()
+                    ->options([
+                        'Inscription'=>'Inscription',
+                        'Scholarship'=>'Scholarship',
+                        'Canteen'=>'Canteen',
+                        'Daycare'=>'Daycare',
+                        'Daycare weekend'=>'Daycare weekend'
+                    ]),
                 Forms\Components\TextInput::make('amount'),
                 Forms\Components\TextInput::make('paid_amount'),
                 Forms\Components\Select::make('status')
