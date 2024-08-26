@@ -22,7 +22,6 @@ class CourseResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->alpha()
                     ->maxLength(25),
                 Forms\Components\Select::make('level')
                     ->required()
