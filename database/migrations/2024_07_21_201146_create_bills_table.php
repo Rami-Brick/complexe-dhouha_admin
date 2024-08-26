@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('products');
             $table->string('amount');
             $table->string('paid_amount');
-            $table->enum('status',['Paid','Overdue','Partial']);
+            $table->enum('status',['Paid','Overpaid','Partial']);
             $table->string('reference');
             $table->timestamps();
         });

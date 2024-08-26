@@ -3,15 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BillResource\Pages;
-use App\Filament\Resources\BillResource\RelationManagers;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use App\Models\Bill;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BillResource extends Resource
 {
@@ -25,8 +27,10 @@ class BillResource extends Resource
             ->schema([
                 Forms\Components\Select::make('student_id')
                     ->label('Student')
+                    ->required()
                     ->relationship('student', 'first_name'),
-                Forms\Components\DatePicker::make('due_date'),
+                Forms\Components\DatePicker::make('due_date')
+                ->required(),
                 Forms\Components\Select::make('products')
                     ->multiple()
                     ->options([
@@ -35,15 +39,40 @@ class BillResource extends Resource
                         'Canteen'=>'Canteen',
                         'Daycare'=>'Daycare',
                         'Daycare weekend'=>'Daycare weekend'
-                    ]),
-                Forms\Components\TextInput::make('amount'),
-                Forms\Components\TextInput::make('paid_amount'),
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'Paid'=>'Paid',
-                        'Overdue'=>'Overdue',
-                        'Partial'=>'Partial'
-                    ]),
+                    ])
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        Log::debug($state);
+                        $totalFee = collect($state)->sum(function ($product) {
+                            return config("billing.fees.$product", 0);
+                        });
+                        $set('amount', $totalFee);
+                    }),
+
+                Forms\Components\TextInput::make('amount')
+                    ->disabled()
+                    ->dehydrated(true)
+                    ->required(),
+                Forms\Components\TextInput::make('paid_amount')
+                    ->numeric()
+                    ->extraInputAttributes(['step' => '10'])
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, $get) {
+                        $amount = $get('amount');
+                        if ($state > $amount) {
+                            $status = 'Overpaid';
+                        } elseif ($state == $amount) {
+                            $status = 'Paid';
+                        } else {
+                            $status = 'Partial';
+                        }
+                        $set('status', $status);
+                    }),
+
+                Forms\Components\TextInput::make('status')
+                    ->disabled()
+                    ->dehydrated(true)
+                    ->required()
             ]);
     }
 
@@ -77,8 +106,45 @@ class BillResource extends Resource
                         'Partial'=>'Partial'
                     ]),
             ])
+            ->headerActions([
+                Action::make('Edit Fees')
+                    ->label('Edit Billing Fees')
+                    ->icon('heroicon-o-pencil')
+                    ->action(function (array $data) {
+                        $fees = collect($data['fees'])->pluck('amount', 'product')->toArray();
+                        $configPath = config_path('billing.php');
+                        File::put($configPath, "<?php\n\nreturn [\n    'fees' => " . var_export($fees, true) . ",\n];\n");
+                    })
+                    ->form([
+                        Forms\Components\Repeater::make('fees')
+                            ->schema([
+                                Forms\Components\TextInput::make('product')
+                                    ->label('Product Name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('amount')
+                                    ->label('Fee Amount')
+                                    ->numeric()
+                                    ->required(),
+                            ])
+                            ->defaultItems(count(config('billing.fees')))
+                            ->default(function () {
+                                // Load the existing fees from the config file
+                                $fees = config('billing.fees', []);
+                                return collect($fees)->map(function ($amount, $product) {
+                                    return [
+                                        'product' => $product,
+                                        'amount' => $amount,
+                                    ];
+                                })->values()->toArray();
+                            })
+                            ->minItems(1)
+                            ->columns(2),
+                    ])
+            ])
+
+
             ->actions([
-                Tables\Actions\EditAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
