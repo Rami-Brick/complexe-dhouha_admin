@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BillResource\Pages;
+use App\Forms\Components\Stepper;
+use App\Models\Configs;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -31,37 +33,35 @@ class BillResource extends Resource
                     ->relationship('student', 'first_name'),
                 Forms\Components\DatePicker::make('due_date')
                 ->required(),
+
                 Forms\Components\Select::make('products')
                     ->multiple()
-                    ->options([
-                        'Inscription'=>'Inscription',
-                        'Scholarship'=>'Scholarship',
-                        'Canteen'=>'Canteen',
-                        'Daycare'=>'Daycare',
-                        'Daycare weekend'=>'Daycare weekend'
-                    ])
+                    ->options(function () {
+                        return Configs::pluck('name', 'name')->toArray();
+                    })
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set) {
-                        Log::debug($state);
                         $totalFee = collect($state)->sum(function ($product) {
-                            return config("billing.fees.$product", 0);
+                            $fee = Configs::where('name', $product)->value('value');
+                            return $fee ?: 0;
                         });
                         $set('amount', $totalFee);
+                        $set('paid_amount', $totalFee);
+                        $set('status', 'Paid');
                     }),
 
                 Forms\Components\TextInput::make('amount')
                     ->disabled()
                     ->dehydrated(true)
-                    ->required(),
+                    ,
+
                 Forms\Components\TextInput::make('paid_amount')
                     ->numeric()
                     ->extraInputAttributes(['step' => '10'])
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, $get) {
                         $amount = $get('amount');
-                        if ($state > $amount) {
-                            $status = 'Overpaid';
-                        } elseif ($state == $amount) {
+                        if ($state >= $amount) {
                             $status = 'Paid';
                         } else {
                             $status = 'Partial';
@@ -72,7 +72,7 @@ class BillResource extends Resource
                 Forms\Components\TextInput::make('status')
                     ->disabled()
                     ->dehydrated(true)
-                    ->required()
+                ,
             ]);
     }
 
@@ -128,7 +128,6 @@ class BillResource extends Resource
                             ])
                             ->defaultItems(count(config('billing.fees')))
                             ->default(function () {
-                                // Load the existing fees from the config file
                                 $fees = config('billing.fees', []);
                                 return collect($fees)->map(function ($amount, $product) {
                                     return [
