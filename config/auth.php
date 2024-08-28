@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'admin'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -36,9 +36,17 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'admin' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'admins',
+        ],
+        'staff' => [
+            'driver' => 'session',
+            'provider' => 'staffs',
+        ],
+        'relative' => [
+            'driver' => 'session',
+            'provider' => 'relatives',
         ],
     ],
 
@@ -60,9 +68,17 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'admins' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
+        ],
+        'relatives' => [
+            'driver' => 'eloquent',
+            'model' =>App\Models\Relative::class,
+        ],
+        'staffs' => [
+            'driver' => 'eloquent',
+            'model' =>App\Models\Staff::class,
         ],
 
         // 'users' => [
@@ -98,6 +114,7 @@ return [
             'throttle' => 60,
         ],
     ],
+    //todo to be configured
 
     /*
     |--------------------------------------------------------------------------

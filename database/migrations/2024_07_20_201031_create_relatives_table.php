@@ -22,7 +22,9 @@ return new class extends Migration
             $table->string('cin_father')->nullable();
             $table->string('cin_mother')->nullable();
             $table->string('email')->nullable();
-            $table->string('address');
+            $table->string('password')->nullable();
+            $table->rememberToken();
+            $table->string('address')->nullable();
             $table->string('notes')->nullable();
             $table->timestamps();
         });

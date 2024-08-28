@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+// @property string name
 /**
  * @property int id
  * @property int student_id
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string phone_father
  * @property string phone_mother
  * @property string email
+ * @property string password
  * @property string address
  * @property string job_father
  * @property string job_mother
@@ -26,11 +29,20 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @proprety \Illuminate\Support\Collection students
  */
-class Relative extends Model
+class Relative  extends Authenticatable implements  HasName
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+    public function getFilamentName(): string
+    {
+        return "{$this->father_name} {$this->mother_name}";
+    }
 
     public function students()
     {
@@ -41,6 +53,10 @@ class Relative extends Model
         return Attribute::make(
             get: fn (string|null $value) => $this->father_name??$this->mother_name,
         );
+    }
+    public function isRelative(): bool
+    {
+        return  $this->email = DB::table('relative')->exists();
     }
 
 }

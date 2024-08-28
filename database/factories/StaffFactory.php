@@ -27,6 +27,7 @@ class StaffFactory extends Factory
             'name'=>fake()->Name(),
             'phone'=>$this->faker->unique()->numberBetween(93000000,99000000),
             'email'=>fake()->email(),
+            'password'=>Hash::make('admin'),
         ];
     }
 
