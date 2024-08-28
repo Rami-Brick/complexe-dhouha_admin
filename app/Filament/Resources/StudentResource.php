@@ -44,6 +44,7 @@ class StudentResource extends Resource
                     'boy'=>'boy',
                     'girl'=>'girl'
                     ]),
+                
 
                 Forms\Components\Select::make('course_id')
                     ->required()
@@ -152,7 +153,6 @@ class StudentResource extends Resource
                             ->maxLength(500),
                     ]),
 
-
                 Forms\Components\Select::make('payment_status')
                     ->required()
                     ->options([
@@ -183,6 +183,7 @@ class StudentResource extends Resource
                 Tables\Columns\TextColumn::make('first_name')
                 ->searchable()
                 ->sortable(),
+
                 Tables\Columns\TextColumn::make('last_name')
                     ->searchable()
                     ->sortable(),
