@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained()->restrictOnDelete();
-            $table->date('month');
+            $table->date('issue_date');
             $table->string('products');
             $table->string('amount');
-            $table->string('paid_amount')->nullable();
+            $table->integer('paid_amount')->default(0);
             $table->string('status');
             $table->string('reference');
             $table->timestamps();

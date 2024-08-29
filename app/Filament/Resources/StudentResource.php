@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Exports\StudentExporter;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
+use App\Models\Configs;
 use App\Models\Relative;
 use App\Models\Student;
 use Carbon\Carbon;
@@ -44,12 +45,6 @@ class StudentResource extends Resource
                     'boy'=>'boy',
                     'girl'=>'girl'
                     ]),
-                
-
-                Forms\Components\Select::make('course_id')
-                    ->required()
-                    ->label('Course')
-                    ->relationship('course', 'name'),
 
                 Forms\Components\Select::make('relative_id')
                     ->label('Relative')
@@ -153,20 +148,16 @@ class StudentResource extends Resource
                             ->maxLength(500),
                     ]),
 
-                Forms\Components\Select::make('payment_status')
-                    ->required()
-                    ->options([
-                        'Paid'=>'Paid',
-                        'Overdue'=>'Overdue',
-                        'Partial'=>'Partial',
-                ]),
+
                 Forms\Components\Textarea::make('comments')
                     ->maxLength(500)
                     ->nullable(),
+
                 Forms\Components\FileUpload::make('image')
                     ->image()
                     ->directory('students')
                     ->nullable(),
+
             ]);
     }
 

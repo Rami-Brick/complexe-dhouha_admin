@@ -31,50 +31,55 @@ class BillResource extends Resource
                     ->label('Student')
                     ->required()
                     ->relationship('student', 'first_name'),
-                Forms\Components\DatePicker::make('due_date')
-                ->required(),
 
-                Forms\Components\Select::make('products')
-                    ->multiple()
-                    ->options(function () {
-                        return Configs::pluck('name', 'name')->toArray();
-                    })
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $totalFee = collect($state)->sum(function ($product) {
-                            $fee = Configs::where('name', $product)->value('value');
-                            return $fee ?: 0;
-                        });
-                        $set('amount', $totalFee);
-                        $set('paid_amount', $totalFee);
-                        $set('status', 'Paid');
-                    }),
+
+                Forms\Components\DatePicker::make('issue_date')
+                    ->label('Issue Date')
+                    ->default(now()->format('Y-m-d')),
+
+
+//                Forms\Components\Select::make('products')
+//                    ->multiple()
+//                    ->options(function () {
+//                        return Configs::query()->pluck('name', 'name')->toArray();
+//                    })
+//                    ->reactive()
+//                    ->afterStateUpdated(function ($state, callable $set) {
+//                        $totalFee = collect($state)->sum(function ($product) {
+//                            $fee = Configs::query()->where('name', $product)->value('value');
+//                            return $fee ?: 0;
+//                        });
+//                        $set('amount', $totalFee);
+//                        $set('paid_amount', null);
+//                        $set('status', 'Not Paid');
+//                    }),
 
                 Forms\Components\TextInput::make('amount')
+                    ->label('Total Amount')
                     ->disabled()
-                    ->dehydrated(true)
-                    ,
+                    ->dehydrated(true),
 
                 Forms\Components\TextInput::make('paid_amount')
                     ->numeric()
                     ->extraInputAttributes(['step' => '10'])
+                    ->default(null)
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, $get) {
                         $amount = $get('amount');
-                        if ($state >= $amount) {
-                            $status = 'Paid';
-                        } else {
+                        if ($state === null || $state < $amount) {
                             $status = 'Partial';
+                        } elseif ($state >= $amount) {
+                            $status = 'Paid';
                         }
                         $set('status', $status);
                     }),
 
                 Forms\Components\TextInput::make('status')
                     ->disabled()
-                    ->dehydrated(true)
-                ,
+                    ->dehydrated(true),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -83,7 +88,8 @@ class BillResource extends Resource
                 Tables\Columns\TextColumn::make('student.first_name')->Label('Student')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('due_date')
+                Tables\Columns\TextColumn::make('issue_date')
+                    ->date('F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('products')
                     ->searchable()
@@ -106,42 +112,6 @@ class BillResource extends Resource
                         'Partial'=>'Partial'
                     ]),
             ])
-            ->headerActions([
-                Action::make('Edit Fees')
-                    ->label('Edit Billing Fees')
-                    ->icon('heroicon-o-pencil')
-                    ->action(function (array $data) {
-                        $fees = collect($data['fees'])->pluck('amount', 'product')->toArray();
-                        $configPath = config_path('billing.php');
-                        File::put($configPath, "<?php\n\nreturn [\n    'fees' => " . var_export($fees, true) . ",\n];\n");
-                    })
-                    ->form([
-                        Forms\Components\Repeater::make('fees')
-                            ->schema([
-                                Forms\Components\TextInput::make('product')
-                                    ->label('Product Name')
-                                    ->required(),
-                                Forms\Components\TextInput::make('amount')
-                                    ->label('Fee Amount')
-                                    ->numeric()
-                                    ->required(),
-                            ])
-                            ->defaultItems(count(config('billing.fees')))
-                            ->default(function () {
-                                $fees = config('billing.fees', []);
-                                return collect($fees)->map(function ($amount, $product) {
-                                    return [
-                                        'product' => $product,
-                                        'amount' => $amount,
-                                    ];
-                                })->values()->toArray();
-                            })
-                            ->minItems(1)
-                            ->columns(2),
-                    ])
-            ])
-
-
             ->actions([
 
             ])

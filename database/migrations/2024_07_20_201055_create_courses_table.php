@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('level', ['bébé', '1-2 ans', '2-3 ans', '3 ans', '4 ans', '5 ans']);
             $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
+            $table->date('start_date')->nullable();
             $table->timestamps();
         });
     }

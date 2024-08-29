@@ -29,6 +29,10 @@ class Student extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'products' => 'array',
+    ];
+
 //    public function getBirthDateAttribute($value)
 //    {
 //        return $value.$value;
