@@ -125,7 +125,7 @@ class StudentResource extends Resource
                         Forms\Components\TextInput::make('job_mother')
                             ->maxLength(25)
                             ->alpha()
-                            ->required('mother_name,phone_mother,email,cin_mother,job_mother'),
+                            ->requiredWithAll('mother_name,phone_mother,cin_mother,job_mother'),
 
                         Forms\Components\TextInput::make('cin_father')
                             ->length(8)

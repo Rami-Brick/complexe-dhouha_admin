@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string last_name
  * @property string birth_date
  * @property int course_id
+ * @property string start_date
  * @property int gender
  * @property int relative_id
  * @property string payment_status
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string updated_at
  *
  * @property Relative relative
+ * @property Course course
  */
 class Student extends Model
 {
@@ -83,6 +85,11 @@ class Student extends Model
     public function bill()
     {
         return $this->hasMany(Bill::class,'bill_id');
+    }
+
+    public function options()
+    {
+        return $this->belongsToMany(Product::class)->withTimestamps()->where('type', Product::TYPE_OPTION);
     }
 
 

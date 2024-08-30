@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\Staff;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +29,8 @@ class CourseFactory extends Factory
             'name' => $this->faker->word(),
             'level' => $this->faker->randomElement(['bébé', '1-2 ans', '2-3 ans', '3 ans', '4 ans', '5 ans']),
             'staff_id' => Staff::factory(),
+            'registration_id' => Product::type(Product::TYPE_REGISTRATION)->value('id'),
+            'scholarship_id' => Product::type(Product::TYPE_SCHOLARSHIP)->value('id'),
         ];
     }
 

@@ -4,9 +4,14 @@ namespace App\Filament\Resources\StudentResource\Pages;
 
 use App\Filament\Resources\StudentResource;
 use App\Models\Configs;
+use App\Models\Course;
+use App\Models\Product;
+use App\Repositories\StudentRepository;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -34,22 +39,38 @@ class EditStudent extends EditRecord
             ->modal()
             ->form([
                 Select::make('course_id')
-                    ->label('Course')
-                    ->relationship('course', 'name'),
-                CheckboxList::make('products')
-                    ->options(function () {
-                        return Configs::query()
-                            ->where('name', '!=', 'Inscription')
-                            ->where('name', '!=', 'Scholarship')
-                            ->pluck('name', 'name')
-                            ->toArray();
-                    }),
+                    ->label(__('course.course'))
+                    ->placeholder(__('course.no-course'))
+                    ->relationship('course', 'name')
+                    ->default( $this->record->course_id ),
+                Checkbox::make('generate')
+                    ->label('Generate registration bill'),
+
+                CheckboxList::make('options')
+                    ->options(Product::list(Product::TYPE_OPTION))
+                    ->default($this->record->options()->pluck('products.id')->toArray()),
+                DatePicker::make('start')
+                    ->label('Starting Date')
+                    ->default($this->record->start_date),
+
+
             ])
             ->action(function (array $data) {
-                Notification::make()
-                    ->success()
-                    ->title($data['products'])
-                    ->send();
+                $studentRepository = new StudentRepository($this->record);
+                if(!$data['course_id']) {
+                    $studentRepository->unAssignCourse();
+                    return;
+                }
+
+                $course = Course::query()->findOrFail($data['course_id']);
+                $optionIds = $data['options'];
+                $courseStartDate = $data['start'];
+                $studentRepository->assignCourse($course, $courseStartDate, $optionIds);
+
+                $generateBill = $data['generate'];
+                if ($generateBill) {
+                    $studentRepository->generateRegistrationBill();
+                }
             });
 
     }

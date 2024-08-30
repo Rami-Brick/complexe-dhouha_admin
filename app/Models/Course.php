@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string name
  * @property string level
  * @property int staff_id
+ * @property string start_date
  * @property string created_at
  * @property string updated_at
  *
@@ -39,5 +40,14 @@ class Course extends Model
         return $this->belongsTo(Staff::class,'staff_id');
     }
 
+    public function registration()
+    {
+        return $this->belongsTo(Product::class,'registration_id');
+    }
+
+    public function scholarship()
+    {
+        return $this->belongsTo(Product::class,'scholarship_id');
+    }
 
 }

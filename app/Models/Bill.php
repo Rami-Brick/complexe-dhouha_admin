@@ -10,6 +10,10 @@ class Bill extends Model
 {
     use HasFactory;
 
+    const STATUS_UNPAID = 'not paid';
+    const STATUS_PAID = 'paid';
+    const STATUS_PARTIALLY_PAID = 'partial';
+
     protected $guarded = [];
 
     protected $casts = [

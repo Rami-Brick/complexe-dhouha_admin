@@ -38,21 +38,13 @@ class BillResource extends Resource
                     ->default(now()->format('Y-m-d')),
 
 
-//                Forms\Components\Select::make('products')
-//                    ->multiple()
-//                    ->options(function () {
-//                        return Configs::query()->pluck('name', 'name')->toArray();
-//                    })
-//                    ->reactive()
-//                    ->afterStateUpdated(function ($state, callable $set) {
-//                        $totalFee = collect($state)->sum(function ($product) {
-//                            $fee = Configs::query()->where('name', $product)->value('value');
-//                            return $fee ?: 0;
-//                        });
-//                        $set('amount', $totalFee);
-//                        $set('paid_amount', null);
-//                        $set('status', 'Not Paid');
-//                    }),
+                Forms\Components\Placeholder::make('products')
+                    ->disabled('true')
+                    ->label('Products')
+                    ->content(function (Bill|null $bill) {
+                        return $bill ? implode(', ', collect($bill->products)->pluck('name', 'name')->toArray()) : '';
+                    }),
+
 
                 Forms\Components\TextInput::make('amount')
                     ->label('Total Amount')
@@ -90,9 +82,6 @@ class BillResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('issue_date')
                     ->date('F Y')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('products')
-                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable(),

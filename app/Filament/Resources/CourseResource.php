@@ -36,7 +36,10 @@ class CourseResource extends Resource
                 Forms\Components\Select::make('staff_id')
                     ->required()
                     ->label('Staff')
-                    ->relationship('staff', 'name')
+                    ->relationship('staff', 'name'),
+
+                Forms\Components\DatePicker::make('start_date')
+                    ->label('Starting Date')
             ]);
     }
 
@@ -52,6 +55,8 @@ class CourseResource extends Resource
                 ->sortable(),
                 Tables\Columns\TextColumn::make('staff.name')->label('Staff')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('start_date')
                     ->sortable(),
             ])
             ->filters([

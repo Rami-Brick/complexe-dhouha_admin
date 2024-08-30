@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained()->restrictOnDelete();
             $table->date('issue_date');
-            $table->string('products');
+            $table->text('products');
             $table->string('amount');
             $table->integer('paid_amount')->default(0);
             $table->string('status');

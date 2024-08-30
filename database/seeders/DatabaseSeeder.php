@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Configs;
 use App\Models\Event;
+use App\Models\Product;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,6 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $products = [
+            ['name' => 'Inscription', 'type' => Product::TYPE_REGISTRATION, 'fee' => '100'],
+            ['name' => 'Scholarship', 'type' => Product::TYPE_SCHOLARSHIP, 'fee' => '80'],
+            ['name' => 'Canteen', 'type' => Product::TYPE_OPTION, 'fee' => '60'],
+            ['name' => 'Daycare', 'type' => Product::TYPE_OPTION, 'fee' => '40'],
+            ['name' => 'Daycare weekend', 'type' => Product::TYPE_OPTION, 'fee' => '20'],
+        ];
+
+        Product::query()->insert($products);
         \App\Models\Student::factory(10)->create();
         \App\Models\Staff::factory(10)->create();
         \App\Models\Relative::factory(10)->create();
@@ -24,17 +34,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Comment::factory(10)->create();
         \App\Models\User::factory(1)->create();
 //        \App\Models\Configs::factory(5)->create();
-        $products = [
-            ['name' => 'Inscription', 'value' => '100'],
-            ['name' => 'Scholarship', 'value' => '80'],
-            ['name' => 'Canteen', 'value' => '60'],
-            ['name' => 'Daycare', 'value' => '40'],
-            ['name' => 'Daycare weekend', 'value' => '20'],
-        ];
-
-        foreach ($products as $product) {
-            Configs::create($product);
-        }
 
        // User::factory()->create([
        //     'name' => 'Test User',
