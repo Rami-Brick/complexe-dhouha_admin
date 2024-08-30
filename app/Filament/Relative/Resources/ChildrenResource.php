@@ -24,8 +24,6 @@ class ChildrenResource extends Resource
     protected static ?string $model = Student::class;
 
 
-
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
@@ -40,16 +38,13 @@ class ChildrenResource extends Resource
           ->schema([
               Components\Section::make()->schema([
                   Components\ImageEntry::make('image')
-
-
                       ->circular()
                       ->height(250)
                       ->defaultImageUrl(url('/img/default.jpg')),
                   Components\TextEntry::make('first_name')
                       ->columnSpan(2)
                       ->markdown(),
-                  Components\TextEntry::make('last_name')
-                      ,
+                  Components\TextEntry::make('last_name'),
                   Components\TextEntry::make('birth_date')
                       ->icon('heroicon-m-user')
                       ->label('Age')
@@ -81,7 +76,6 @@ class ChildrenResource extends Resource
                         ->default('No Event Participation yet')
                         ->color(fn (string $state): string => match ($state) {
                           'No Event Participation yet' => 'danger',
-
                       }),
                   Components\TextEntry::make('leave_with'),
                   Components\TextEntry::make('comments'),
@@ -126,9 +120,6 @@ class ChildrenResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()
             ])
             ]);
-
-
-
     }
     public static function getAction(): void
     {
@@ -152,7 +143,6 @@ class ChildrenResource extends Resource
 
         ];
     }
-
 
     public static function getPages(): array
     {
