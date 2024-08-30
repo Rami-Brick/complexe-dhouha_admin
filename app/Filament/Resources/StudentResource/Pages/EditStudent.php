@@ -6,6 +6,7 @@ use App\Filament\Resources\StudentResource;
 use App\Models\Configs;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -34,24 +35,22 @@ class EditStudent extends EditRecord
             ->form([
                 Select::make('course_id')
                     ->label('Course')
-                    ->relationship('course', 'name')
-
+                    ->relationship('course', 'name'),
+                CheckboxList::make('products')
+                    ->options(function () {
+                        return Configs::query()
+                            ->where('name', '!=', 'Inscription')
+                            ->where('name', '!=', 'Scholarship')
+                            ->pluck('name', 'name')
+                            ->toArray();
+                    }),
             ])
             ->action(function (array $data) {
                 Notification::make()
                     ->success()
-                    ->title($data['body'])
+                    ->title($data['products'])
                     ->send();
             });
-        Forms\Components\Select::make('course_id')
-            ->label('Course')
-            ->relationship('course', 'name'),
-        Forms\Components\CheckboxList::make('products')
-            ->options(function () {
-                return Configs::query()
-                    ->where('name', '!=', 'Inscription')
-                    ->pluck('name', 'name')
-                    ->toArray();
-            }),
+
     }
 }
