@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Course::factory(10)->create();
         \App\Models\Comment::factory(10)->create();
         \App\Models\User::factory(1)->create();
-//        \App\Models\Configs::factory(5)->create();
+
 
        // User::factory()->create([
        //     'name' => 'Test User',

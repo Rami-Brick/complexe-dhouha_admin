@@ -57,10 +57,6 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->userMenuItems([
-            'config' => UserMenuItem::make()
-                ->label('Configs')
-                ->url('/admin/configs')
-                ->icon('heroicon-o-cog'),
             ]);
     }
 }

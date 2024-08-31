@@ -66,6 +66,7 @@ class EditStudent extends EditRecord
                 $optionIds = $data['options'];
                 $courseStartDate = $data['start'];
                 $studentRepository->assignCourse($course, $courseStartDate, $optionIds);
+                $studentRepository->generateMonthlyBill();
 
                 $generateBill = $data['generate'];
                 if ($generateBill) {

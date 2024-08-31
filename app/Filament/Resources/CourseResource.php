@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CourseResource\Pages;
 use App\Models\Course;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -39,7 +40,17 @@ class CourseResource extends Resource
                     ->relationship('staff', 'name'),
 
                 Forms\Components\DatePicker::make('start_date')
-                    ->label('Starting Date')
+                    ->label('Starting Date'),
+
+                Forms\Components\Select::make('registration_id')
+                    ->label('Registration')
+                    ->relationship('registration', 'name')
+                    ->options(Product::list(Product::TYPE_REGISTRATION)),
+
+                Forms\Components\Select::make('scholarship_id')
+                    ->label('Scholarship')
+                    ->relationship('scholarship', 'name')
+                    ->options(Product::list(Product::TYPE_SCHOLARSHIP)),
             ]);
     }
 

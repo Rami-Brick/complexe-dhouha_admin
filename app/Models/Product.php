@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    protected $guarded = [];
     const TYPE_REGISTRATION = 1;
     const TYPE_SCHOLARSHIP = 2;
     const TYPE_OPTION = 3;
