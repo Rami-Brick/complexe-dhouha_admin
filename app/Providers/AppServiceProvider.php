@@ -16,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
         FilamentColor::register([
             'blue' => Color::hex('#0ea5e9'),
             'pink' => Color::hex('#f9429e'),
+            'red' => Color::hex('#FF0000'),
+            'green' => Color::hex('#00FF00'),
+            'orange' => Color::hex('#FFA500'),
         ]);
     }
 

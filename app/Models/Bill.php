@@ -16,6 +16,8 @@ class Bill extends Model
 
     protected $guarded = [];
 
+    protected $defaultOrder = ['reference' => 'desc'];
+
     protected $casts = [
         'products' => 'array',
     ];

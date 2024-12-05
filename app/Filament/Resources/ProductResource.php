@@ -38,7 +38,7 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('fee')
                     ->label('Fee')
                     ->numeric()
-                    ->extraInputAttributes(['step' => '10'])
+                    ->extraInputAttributes(['step' => '5'])
             ]);
     }
 

@@ -27,11 +27,22 @@ class BillResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('student_id')
-                    ->label('Student')
-                    ->required()
-                    ->relationship('student', 'first_name'),
+//                 Forms\Components\Select::make('student_id')
+//                     ->label('Student')
+//                     ->required()
+//                     ->relationship('student', 'first_name')
+//                     ->afterStateUpdated(function ($state, callable $set) {
+//                                     $student = \App\Models\Student::find($state);
+//                                     if ($student) {
+//                                         $set('student_name', $student->first_name . ' ' . $student->last_name);
+//                                     } else {
+//                                         $set('student_name', null);
+//                                     }
+//                                 }),
 
+                Forms\Components\TextInput::make('student_name')
+                    ->disabled('true')
+                    ->label('Student'),
 
                 Forms\Components\DatePicker::make('issue_date')
                     ->label('Issue Date')
@@ -53,7 +64,7 @@ class BillResource extends Resource
 
                 Forms\Components\TextInput::make('paid_amount')
                     ->numeric()
-                    ->extraInputAttributes(['step' => '10'])
+                    ->extraInputAttributes(['step' => '5'])
                     ->default(null)
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, $get) {
@@ -76,8 +87,9 @@ class BillResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Bill::query()->orderBy('reference', 'desc'))
             ->columns([
-                Tables\Columns\TextColumn::make('student.first_name')->Label('Student')
+                Tables\Columns\TextColumn::make('student_name')->Label('Student')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('issue_date')
@@ -87,7 +99,12 @@ class BillResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('paid_amount')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\BadgeColumn::make('status')
+                  ->colors([
+                            'green' => 'Paid',
+                            'red' => 'not paid',
+                            'orange' => 'Partial',
+                                ])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reference')
                     ->searchable()
@@ -122,7 +139,7 @@ class BillResource extends Resource
     {
         return [
             'index' => Pages\ListBills::route('/'),
-            'create' => Pages\CreateBill::route('/create'),
+//             'create' => Pages\CreateBill::route('/create'),
             'edit' => Pages\EditBill::route('/{record}/edit'),
         ];
     }

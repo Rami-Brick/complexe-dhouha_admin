@@ -25,13 +25,13 @@ class DatabaseSeeder extends Seeder
         ];
 
         Product::query()->insert($products);
-        \App\Models\Student::factory(10)->create();
-        \App\Models\Staff::factory(10)->create();
-        \App\Models\Relative::factory(10)->create();
-        \App\Models\Event::factory(10)->create();
-        \App\Models\Objective::factory(10)->create();
-        \App\Models\Course::factory(10)->create();
-        \App\Models\Comment::factory(10)->create();
+        \App\Models\Student::factory(4)->create();
+        \App\Models\Staff::factory(2)->create();
+        \App\Models\Relative::factory(2)->create();
+//         \App\Models\Event::factory(10)->create();
+//         \App\Models\Objective::factory(10)->create();
+        \App\Models\Course::factory(4)->create();
+//         \App\Models\Comment::factory(10)->create();
         \App\Models\User::factory(1)->create();
 
 

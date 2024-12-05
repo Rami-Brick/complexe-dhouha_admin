@@ -24,7 +24,7 @@ class StaffResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->required(),
 

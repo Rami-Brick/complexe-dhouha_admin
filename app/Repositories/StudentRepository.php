@@ -42,6 +42,7 @@ class StudentRepository
         }
         $bill = new Bill();
         $bill->student_id = $this->student->id;
+        $bill->student_name = $this->student->first_name . ' ' . $this->student->last_name;
         $bill->issue_date = date('Y-m-d');
         $bill->amount = $this->student->course->registration->fee;
         $bill->paid_amount = 0;
@@ -64,6 +65,7 @@ class StudentRepository
         $amount += $this->student->options->sum('fee');
         $bill = new Bill();
         $bill->student_id = $this->student->id;
+        $bill->student_name = $this->student->first_name . ' ' . $this->student->last_name;
         $bill->issue_date = date('Y-m-d');
         $bill->amount = $amount;
         $bill->paid_amount = 0;

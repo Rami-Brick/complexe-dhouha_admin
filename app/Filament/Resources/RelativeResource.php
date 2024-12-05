@@ -27,7 +27,7 @@ class RelativeResource extends Resource
                 Forms\Components\TextInput::make('father_name')
                     ->nullable()
                     ->requiredWithout('mother_name')
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->validationMessages([
                         'required_without' => 'Please provide at least one parent\'s name.'])
@@ -35,7 +35,7 @@ class RelativeResource extends Resource
 
                 Forms\Components\TextInput::make('mother_name')
                     ->nullable()
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->requiredWithout('father_name')
                     ->validationMessages([
@@ -64,18 +64,19 @@ class RelativeResource extends Resource
 
                 Forms\Components\TextInput::make('address')
                     ->nullable()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(100)
                     ->string(),
 
                 Forms\Components\TextInput::make('job_father')
                     ->string()
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->nullable(),
 
                 Forms\Components\TextInput::make('job_mother')
                     ->string()
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->nullable(),
 

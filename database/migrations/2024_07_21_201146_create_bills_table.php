@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained()->restrictOnDelete();
+            $table->foreignId('student_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('student_name')->nullable();
             $table->date('issue_date');
             $table->text('products');
             $table->string('amount');

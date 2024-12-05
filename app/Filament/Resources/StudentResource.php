@@ -29,12 +29,12 @@ class StudentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('first_name')
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->requiredWithAll('last_name,birth_date,gender,payment_status'),
 
                 Forms\Components\TextInput::make('last_name')
-                    ->alpha()
+                    ->regex('/^[\pL\s\-]+$/u')
                     ->maxLength(25)
                     ->requiredWithAll('first_name,birth_date,gender,payment_status'),
 
@@ -75,7 +75,7 @@ class StudentResource extends Resource
                         Forms\Components\TextInput::make('father_name')
                             ->nullable()
                             ->requiredWithout('mother_name')
-                            ->alpha()
+                            ->regex('/^[\pL\s\-]+$/u')
                             ->maxLength(25)
                             ->validationMessages([
                                 'required_without' => 'Please provide at least one parent\'s name.'])
@@ -83,7 +83,7 @@ class StudentResource extends Resource
 
                         Forms\Components\TextInput::make('mother_name')
                             ->nullable()
-                            ->alpha()
+                            ->regex('/^[\pL\s\-]+$/u')
                             ->maxLength(25)
                             ->requiredWithout('father_name')
                             ->validationMessages([
@@ -114,17 +114,18 @@ class StudentResource extends Resource
 
                         Forms\Components\TextInput::make('address')
                             ->required()
+                            ->regex('/^[\pL\s\-]+$/u')
                             ->maxLength(100)
                             ->string(),
 
                         Forms\Components\TextInput::make('job_father')
-                            ->alpha()
+                            ->regex('/^[\pL\s\-]+$/u')
                             ->maxLength(25)
                             ->requiredWithAll('father_name,phone_father,email,cin_father,job_father'),
 
                         Forms\Components\TextInput::make('job_mother')
                             ->maxLength(25)
-                            ->alpha()
+                            ->regex('/^[\pL\s\-]+$/u')
                             ->requiredWithAll('mother_name,phone_mother,cin_mother,job_mother'),
 
                         Forms\Components\TextInput::make('cin_father')
